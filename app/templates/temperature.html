@@ -55,7 +55,7 @@
             fetch('/api/latest-temperature/')
             .then(response => response.json())
             .then(data => {
-                document.getElementById('temperature').innerText = data.temperature + ' °C';
+                document.getElementById('temperature').innerText = data.temperature;
             });
         }
 
