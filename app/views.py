@@ -19,9 +19,12 @@ class TemperatureHumidityCreateAPIView(generics.CreateAPIView):
     serializer_class = TemperatureHumiditySerializer
 
 class LatestTemperatureHumidityAPIView(APIView):
-    def get(self, request):
-        latest_temperaturehumidity = TemperatureHumidity.objects.latest('id')
-        return Response({"temperaturehumidity": latest_temperaturehumidity.data})
+    def get(self, request, *args, **kwargs):
+        latest_record = TemperatureHumidity.objects.latest('timestamp')
+        return Response({
+            'temperature': latest_record.temperature,
+            'humidity': latest_record.humidity
+        })
     
 def temperature_monitor(request):
     return render(request, 'temperature.html')
