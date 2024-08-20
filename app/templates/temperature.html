@@ -259,7 +259,7 @@ var humidityChart = new Chart(humidityCtx, {
         // Function to fetch data from the server
         function fetchData() {
     $.ajax({
-        url: '/latest-temperature/',  // Ensure this URL matches the one in urls.py
+        url: '/api/latest_temperaturehumidity/',  // Ensure this URL matches the one in urls.py
         method: 'GET',
         success: function(response) {
             console.log("Data received:", response);
