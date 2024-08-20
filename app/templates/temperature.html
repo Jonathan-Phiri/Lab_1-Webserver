@@ -264,21 +264,24 @@ var humidityChart = new Chart(humidityCtx, {
         success: function(response) {
             console.log("Data received:", response);
 
-            // Initialize variables for the latest temperature and humidity
-            var latestTemperature = null;
-            var latestHumidity = null;
+            // Initialize arrays to store labels (time), temperature, and humidity data
+            var labels = [];
+            var temperatureData = [];
+            var humidityData = [];
 
             // Handle different response formats
             if (response.temperature && response.humidity) {
-                // If the response is an object with temperature and humidity properties
-                latestTemperature = response.temperature;
-                latestHumidity = response.humidity;
+                // If the response is a single object with temperature and humidity properties
+                labels.push(new Date());  // Use the current time as the label
+                temperatureData.push(response.temperature);
+                humidityData.push(response.humidity);
             } else if (Array.isArray(response)) {
                 // If the response is an array, process each entry
                 response.forEach(function(entry) {
-                    if (entry.temperature && entry.humidity) {
-                        latestTemperature = entry.temperature;
-                        latestHumidity = entry.humidity;
+                    if (entry.timestamp && entry.temperature && entry.humidity) {
+                        labels.push(new Date(entry.timestamp));
+                        temperatureData.push(entry.temperature);
+                        humidityData.push(entry.humidity);
                     } else {
                         console.warn("Unexpected entry format:", entry);
                     }
@@ -287,9 +290,21 @@ var humidityChart = new Chart(humidityCtx, {
                 console.warn("Unexpected response format:", response);
             }
 
+            // Update the temperature chart
+            temperatureChart.data.labels = labels;
+            temperatureChart.data.datasets[0].data = temperatureData;
+            temperatureChart.update();
+
+            // Update the humidity chart
+            humidityChart.data.labels = labels;
+            humidityChart.data.datasets[0].data = humidityData;
+            humidityChart.update();
+
             // Update the temperature and humidity values in the UI
-            document.getElementById('temperatureValue').innerText = latestTemperature !== null ? latestTemperature + ' °C' : '-- °C';
-            document.getElementById('humidityValue').innerText = latestHumidity !== null ? latestHumidity + ' %' : '-- %';
+            var latestTemperature = temperatureData[temperatureData.length - 1] || '--';
+            var latestHumidity = humidityData[humidityData.length - 1] || '--';
+            document.getElementById('temperatureValue').innerText = latestTemperature + ' °C';
+            document.getElementById('humidityValue').innerText = latestHumidity + ' %';
         },
         error: function(error) {
             console.error("Error fetching data:", error);
@@ -299,6 +314,7 @@ var humidityChart = new Chart(humidityCtx, {
 
 // Fetch data every 2 seconds
 setInterval(fetchData, 2000);
+
 
 
     </script>
