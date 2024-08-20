@@ -56,7 +56,7 @@
     <!-- JavaScript for AJAX polling -->
     <script>
         function fetchSensorData() {
-            fetch('/api/latest-sensor-data/')
+            fetch('/api/latest-temperature/')
             .then(response => response.json())
             .then(data => {
                 document.getElementById('temperature').innerText = data.temperature + ' °C';
