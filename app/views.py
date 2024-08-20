@@ -1,27 +1,27 @@
 from django.shortcuts import render
 from rest_framework import generics
-from .models import Temperature
-from .serializer import TemperatureSerializer
+from .models import TemperatureHumidity
+from .serializer import TemperatureHumiditySerializer
 from rest_framework.views import APIView
 from rest_framework.response import Response
 
-class TemperatureDetailView(generics.RetrieveAPIView):
-    queryset = Temperature.objects.all()
-    serializer_class = TemperatureSerializer
+class TemperatureHumidityDetailView(generics.RetrieveAPIView):
+    queryset = TemperatureHumidity.objects.all()
+    serializer_class = TemperatureHumiditySerializer
 
-class TemperatureListView(generics.ListAPIView):
-    queryset = Temperature.objects.all()
-    serializer_class = TemperatureSerializer
+class TemperatureHumidityListView(generics.ListAPIView):
+    queryset = TemperatureHumidity.objects.all()
+    serializer_class = TemperatureHumiditySerializer
 
 
-class TemperatureCreateAPIView(generics.CreateAPIView):
-    queryset = Temperature.objects.all()
-    serializer_class = TemperatureSerializer
+class TemperatureHumidityCreateAPIView(generics.CreateAPIView):
+    queryset = TemperatureHumidity.objects.all()
+    serializer_class = TemperatureHumiditySerializer
 
-class LatestTemperatureAPIView(APIView):
+class LatestTemperatureHumidityAPIView(APIView):
     def get(self, request):
-        latest_temperature = Temperature.objects.latest('id')
-        return Response({"temperature": latest_temperature.data})
+        latest_temperaturehumidity = TemperatureHumidity.objects.latest('id')
+        return Response({"temperaturehumidity": latest_temperaturehumidity.data})
     
 def temperature_monitor(request):
     return render(request, 'temperature.html')

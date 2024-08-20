@@ -5,9 +5,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Temperature Monitor</title>
+    <title>Environment Monitor</title>
     <style>
-        /* CSS for the temperature display */
+        /* CSS for the temperature and humidity display */
         body {
             margin: 0;
             padding: 0;
@@ -25,7 +25,7 @@
             margin-bottom: 20px;
         }
 
-        div {
+        .sensor-data {
             background-color: #ffffff;
             padding: 20px;
             border-radius: 10px;
@@ -33,95 +33,39 @@
             font-size: 24px;
             color: #666;
             text-align: center;
+            margin-bottom: 20px;
         }
 
-        #temperature {
+        .sensor-data span {
             font-size: 36px;
             font-weight: bold;
             color: #007BFF;
             margin-left: 10px;
         }
-
-        canvas {
-            max-width: 100%;
-            margin-top: 20px;
-        }
     </style>
 </head>
 <body>
-    <h1>Temperature Monitor</h1>
-    <div>
-        Temperature: <span id="temperature">--</span>
+    <h1>Environment Monitor</h1>
+    <div class="sensor-data">
+        Temperature: <span id="temperature">--</span> °C
     </div>
-    
-    <canvas id="temperatureChart" width="400" height="200"></canvas>
+    <div class="sensor-data">
+        Humidity: <span id="humidity">--</span> %
+    </div>
 
-    <!-- Load Chart.js library -->
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-
-    <!-- JavaScript for AJAX polling and chart updating -->
+    <!-- JavaScript for AJAX polling -->
     <script>
-        const temperatureData = {
-            labels: [],
-            datasets: [{
-                label: 'Temperature (°C)',
-                backgroundColor: 'rgba(0, 123, 255, 0.5)',
-                borderColor: '#007BFF',
-                data: [],
-                fill: false,
-                tension: 0.1
-            }]
-        };
-
-        const config = {
-            type: 'line',
-            data: temperatureData,
-            options: {
-                responsive: true,
-                scales: {
-                    x: {
-                        type: 'time',
-                        time: {
-                            unit: 'minute'
-                        },
-                        title: {
-                            display: true,
-                            text: 'Time'
-                        }
-                    },
-                    y: {
-                        title: {
-                            display: true,
-                            text: 'Temperature (°C)'
-                        }
-                    }
-                }
-            }
-        };
-
-        const temperatureChart = new Chart(
-            document.getElementById('temperatureChart'),
-            config
-        );
-
-        function fetchTemperature() {
-            fetch('/api/latest-temperature/')
+        function fetchSensorData() {
+            fetch('/api/latest-sensor-data/')
             .then(response => response.json())
             .then(data => {
-                const now = new Date();
                 document.getElementById('temperature').innerText = data.temperature + ' °C';
-
-                // Add the new data point to the chart
-                temperatureData.labels.push(now);
-                temperatureData.datasets[0].data.push(data.temperature);
-
-                // Update the chart
-                temperatureChart.update();
+                document.getElementById('humidity').innerText = data.humidity + ' %';
             });
         }
 
-        // Fetch temperature every 2 seconds
-        setInterval(fetchTemperature, 2000);
+        // Fetch sensor data every 2 seconds
+        setInterval(fetchSensorData, 2000);
     </script>
 </body>
 </html>
