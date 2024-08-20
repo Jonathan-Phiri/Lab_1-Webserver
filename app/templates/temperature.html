@@ -264,48 +264,27 @@ var humidityChart = new Chart(humidityCtx, {
         success: function(response) {
             console.log("Data received:", response);
 
-            var labels = [];
-            var temperatureData = [];
-            var humidityData = [];
+            // Initialize variables for the latest temperature and humidity
             var latestTemperature = null;
             var latestHumidity = null;
 
-            // Handle both single object and array responses
-            if (Array.isArray(response)) {
+            // Handle different response formats
+            if (response.temperature && response.humidity) {
+                // If the response is an object with temperature and humidity properties
+                latestTemperature = response.temperature;
+                latestHumidity = response.humidity;
+            } else if (Array.isArray(response)) {
+                // If the response is an array, process each entry
                 response.forEach(function(entry) {
-                    if (entry.timestamp && entry.temperature && entry.humidity) {
-                        labels.push(entry.timestamp);
-                        temperatureData.push(entry.temperature);
-                        humidityData.push(entry.humidity);
+                    if (entry.temperature && entry.humidity) {
                         latestTemperature = entry.temperature;
                         latestHumidity = entry.humidity;
                     } else {
                         console.warn("Unexpected entry format:", entry);
                     }
                 });
-            } else if (response.timestamp && response.temperature && response.humidity) {
-                // Handle single object response
-                labels.push(response.timestamp);
-                temperatureData.push(response.temperature);
-                humidityData.push(response.humidity);
-                latestTemperature = response.temperature;
-                latestHumidity = response.humidity;
             } else {
                 console.warn("Unexpected response format:", response);
-            }
-
-            // Update the temperature chart
-            if (temperatureChart) {
-                temperatureChart.data.labels = labels;
-                temperatureChart.data.datasets[0].data = temperatureData;
-                temperatureChart.update();
-            }
-
-            // Update the humidity chart
-            if (humidityChart) {
-                humidityChart.data.labels = labels;
-                humidityChart.data.datasets[0].data = humidityData;
-                humidityChart.update();
             }
 
             // Update the temperature and humidity values in the UI
