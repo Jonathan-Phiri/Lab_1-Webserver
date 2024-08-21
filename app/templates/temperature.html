@@ -10,102 +10,101 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <!-- Date Adapter -->
     <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns"></script>
-    <!-- FontAwesome for Icons -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
     <style>
         body {
-            font-family: Arial, sans-serif;
-            background-color: #0a1d29;
-            color: #fff;
+            font-family: 'Helvetica Neue', sans-serif;
+            background-color: #2b2f3a;
+            color: #d1d5db;
             margin: 0;
             padding: 20px;
         }
 
         .container {
-            background-color: rgba(255, 255, 255, 0.1);
             padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+            border-radius: 12px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
         }
 
-        .card {
-            border-radius: 10px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
-            background-color: rgba(255, 255, 255, 0.2);
+        h1 {
+            font-size: 24px;
+            text-align: center;
+            color: #f3f4f6;
             margin-bottom: 20px;
         }
 
-        .card-body {
-            padding: 20px;
+        .card {
+            background-color: #1c1f26;
+            border: none;
+            border-radius: 12px;
+            margin-bottom: 20px;
         }
 
-        .temperature-title {
-            color: #ff7f0e;
+        .card-title {
+            color: #f3f4f6;
+            font-size: 18px;
+            margin-bottom: 10px;
+            text-align: center;
         }
 
-        .humidity-title {
-            color: #1f77b4;
+        .value-box {
+            text-align: center;
+            margin-top: 10px;
         }
 
-        #temperatureValue {
+        #temperatureValue, #humidityValue {
+            font-size: 28px;
             font-weight: bold;
-            color: #ff7f0e;
-        }
-
-        #humidityValue {
-            font-weight: bold;
-            color: #1f77b4;
+            color: #10b981;
         }
 
         .chart-box {
             padding: 20px;
-            border-radius: 10px;
-            background-color: rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            background-color: #1c1f26;
         }
 
         canvas {
-            width: 100% !important;
-            height: 500px !important;
+            display: block;
+            height: 400px;
+        }
+
+        #datetime {
+            text-align: center;
+            font-size: 18px;
+            margin-top: 20px;
+            color: #9ca3af;
         }
     </style>
 </head>
 <body>
     <div class="container mt-5">
-        <h1 class="text-center">Temperature & Humidity</h1>
-
-        <div class="row">
-            <div class="col-md-6">
-                <div class="card">
-                    <div class="card-body">
-                        <h5 class="card-title temperature-title">Temperature</h5>
-                        <canvas id="temperatureChart"></canvas>
-                        <div class="mt-3 text-center">
-                            <i class="fas fa-thermometer-half fa-2x"></i>
-                            <p id="temperatureValue" class="lead">-- °C</p>
-                        </div>
-                    </div>
+        <h1>Temperature & Humidity</h1>
+        
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">Temperature</h5>
+                <div class="chart-box">
+                    <canvas id="temperatureChart"></canvas>
+                </div>
+                <div class="value-box">
+                    <p id="temperatureValue">-- °C</p>
                 </div>
             </div>
-            <div class="col-md-6">
-                <div class="card">
-                    <div class="card-body">
-                        <h5 class="card-title humidity-title">Humidity</h5>
-                        <canvas id="humidityChart"></canvas>
-                        <div class="mt-3 text-center">
-                            <i class="fas fa-tint fa-2x"></i>
-                            <p id="humidityValue" class="lead">-- %</p>
-                        </div>
-                    </div>
+        </div>
+        
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">Humidity</h5>
+                <div class="chart-box">
+                    <canvas id="humidityChart"></canvas>
+                </div>
+                <div class="value-box">
+                    <p id="humidityValue">-- %</p>
                 </div>
             </div>
         </div>
 
-        <div class="card mt-4">
-            <div class="card-body text-center">
-                <h5 class="card-title">Current Date & Time</h5>
-                <p id="datetime" class="lead"></p>
-            </div>
-        </div>
+        <p id="datetime"></p>
     </div>
 
     <!-- jQuery and dependencies (Bootstrap JS) -->
@@ -114,6 +113,7 @@
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 
     <script>
+        // Function to update date and time
         function updateDateTime() {
             var now = new Date();
             var datetimeStr = now.toLocaleString();
@@ -121,17 +121,8 @@
         }
         setInterval(updateDateTime, 1000);
 
+        // Initialize temperature chart
         var temperatureCtx = document.getElementById('temperatureChart').getContext('2d');
-        var humidityCtx = document.getElementById('humidityChart').getContext('2d');
-
-        var temperatureGradient = temperatureCtx.createLinearGradient(0, 0, 0, 400);
-        temperatureGradient.addColorStop(0, "rgba(255, 127, 14, 0.5)");
-        temperatureGradient.addColorStop(1, "rgba(255, 127, 14, 0)");
-
-        var humidityGradient = humidityCtx.createLinearGradient(0, 0, 0, 400);
-        humidityGradient.addColorStop(0, "rgba(31, 119, 180, 0.5)");
-        humidityGradient.addColorStop(1, "rgba(31, 119, 180, 0)");
-
         var temperatureChart = new Chart(temperatureCtx, {
             type: 'line',
             data: {
@@ -139,63 +130,53 @@
                 datasets: [{
                     label: 'Temperature (°C)',
                     data: [],
-                    borderColor: '#ff7f0e',
-                    borderWidth: 3,
-                    fill: true,
-                    backgroundColor: temperatureGradient,
-                    pointBackgroundColor: '#fff',
-                    pointBorderColor: '#ff7f0e',
-                    pointHoverBackgroundColor: '#ff7f0e',
-                    pointHoverBorderColor: '#fff',
-                    pointRadius: 5,
-                    pointHoverRadius: 7
+                    borderColor: '#3b82f6',
+                    backgroundColor: 'rgba(59, 130, 246, 0.1)',
+                    borderWidth: 2,
+                    tension: 0.4,
+                    pointRadius: 3,
+                    pointBackgroundColor: '#3b82f6'
                 }]
             },
             options: {
-                responsive: true,
                 scales: {
                     x: {
                         type: 'time',
                         time: {
                             unit: 'minute',
-                            tooltipFormat: 'HH:mm:ss'
+                            displayFormats: {
+                                minute: 'h:mm a'
+                            }
                         },
                         grid: {
-                            color: 'rgba(255, 255, 255, 0.1)'
+                            color: 'rgba(209, 213, 219, 0.3)'
                         },
                         ticks: {
-                            color: '#fff'
+                            color: '#d1d5db'
                         }
                     },
                     y: {
                         beginAtZero: true,
                         min: 0,
-                        max: 40,
+                        max: 50,
                         grid: {
-                            color: 'rgba(255, 255, 255, 0.1)'
+                            color: 'rgba(209, 213, 219, 0.3)'
                         },
                         ticks: {
-                            color: '#fff'
+                            color: '#d1d5db'
                         }
                     }
                 },
                 plugins: {
-                    tooltip: {
-                        backgroundColor: 'rgba(255, 127, 14, 0.8)',
-                        titleColor: '#fff',
-                        bodyColor: '#fff',
-                        borderColor: '#ff7f0e',
-                        borderWidth: 1
-                    }
-                },
-                elements: {
-                    line: {
-                        tension: 0.4
+                    legend: {
+                        display: false
                     }
                 }
             }
         });
 
+        // Initialize humidity chart
+        var humidityCtx = document.getElementById('humidityChart').getContext('2d');
         var humidityChart = new Chart(humidityCtx, {
             type: 'line',
             data: {
@@ -203,32 +184,29 @@
                 datasets: [{
                     label: 'Humidity (%)',
                     data: [],
-                    borderColor: '#1f77b4',
-                    borderWidth: 3,
-                    fill: true,
-                    backgroundColor: humidityGradient,
-                    pointBackgroundColor: '#fff',
-                    pointBorderColor: '#1f77b4',
-                    pointHoverBackgroundColor: '#1f77b4',
-                    pointHoverBorderColor: '#fff',
-                    pointRadius: 5,
-                    pointHoverRadius: 7
+                    borderColor: '#f97316',
+                    backgroundColor: 'rgba(249, 115, 22, 0.1)',
+                    borderWidth: 2,
+                    tension: 0.4,
+                    pointRadius: 3,
+                    pointBackgroundColor: '#f97316'
                 }]
             },
             options: {
-                responsive: true,
                 scales: {
                     x: {
                         type: 'time',
                         time: {
                             unit: 'minute',
-                            tooltipFormat: 'HH:mm:ss'
+                            displayFormats: {
+                                minute: 'h:mm a'
+                            }
                         },
                         grid: {
-                            color: 'rgba(255, 255, 255, 0.1)'
+                            color: 'rgba(209, 213, 219, 0.3)'
                         },
                         ticks: {
-                            color: '#fff'
+                            color: '#d1d5db'
                         }
                     },
                     y: {
@@ -236,30 +214,22 @@
                         min: 0,
                         max: 100,
                         grid: {
-                            color: 'rgba(255, 255, 255, 0.1)'
+                            color: 'rgba(209, 213, 219, 0.3)'
                         },
                         ticks: {
-                            color: '#fff'
+                            color: '#d1d5db'
                         }
                     }
                 },
                 plugins: {
-                    tooltip: {
-                        backgroundColor: 'rgba(31, 119, 180, 0.8)',
-                        titleColor: '#fff',
-                        bodyColor: '#fff',
-                        borderColor: '#1f77b4',
-                        borderWidth: 1
-                    }
-                },
-                elements: {
-                    line: {
-                        tension: 0.4
+                    legend: {
+                        display: false
                     }
                 }
             }
         });
 
+        // Function to fetch data from the server
         function fetchData() {
     $.ajax({
         url: '/api/latest_temperaturehumidity/',
@@ -313,6 +283,7 @@
     });
 }
 
+        // Fetch data every 2 seconds
         setInterval(fetchData, 2000);
     </script>
 </body>
