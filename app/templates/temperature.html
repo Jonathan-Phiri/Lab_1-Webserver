@@ -229,51 +229,56 @@
             }
         });
 
-        // Function to fetch data from the server
-        function fetchData() {
-            $.ajax({
-                url: '/api/latest_temperaturehumidity/',
-                method: 'GET',
-                success: function(response) {
-                    var labels = [];
-                    var temperatureData = [];
-                    var humidityData = [];
+      // Function to fetch data from the server
+function fetchData() {
+    $.ajax({
+        url: '/api/latest_temperaturehumidity/',
+        method: 'GET',
+        success: function(response) {
+            var labels = [];
+            var temperatureData = [];
+            var humidityData = [];
 
-                    if (response.temperature && response.humidity) {
-                        labels.push(new Date());
-                        temperatureData.push(response.temperature);
-                        humidityData.push(response.humidity);
-                    } else if (Array.isArray(response)) {
-                        response.forEach(function(entry) {
-                            if (entry.timestamp && entry.temperature && entry.humidity) {
-                                labels.push(new Date(entry.timestamp));
-                                temperatureData.push(entry.temperature);
-                                humidityData.push(entry.humidity);
-                            }
-                        });
+            if (response.temperature && response.humidity && response.timestamp) {
+                // Convert timestamp to Date object
+                var timestamp = new Date(response.timestamp);
+                labels.push(timestamp);
+                temperatureData.push(parseFloat(response.temperature));
+                humidityData.push(parseFloat(response.humidity));
+            } else if (Array.isArray(response)) {
+                response.forEach(function(entry) {
+                    if (entry.timestamp && entry.temperature && entry.humidity) {
+                        // Convert timestamp to Date object
+                        var timestamp = new Date(entry.timestamp);
+                        labels.push(timestamp);
+                        temperatureData.push(parseFloat(entry.temperature));
+                        humidityData.push(parseFloat(entry.humidity));
                     }
+                });
+            }
 
-                    // Update the temperature chart
-                    temperatureChart.data.labels = labels;
-                    temperatureChart.data.datasets[0].data = temperatureData;
-                    temperatureChart.update();
+            // Update the temperature chart
+            temperatureChart.data.labels = labels;
+            temperatureChart.data.datasets[0].data = temperatureData;
+            temperatureChart.update();
 
-                    // Update the humidity chart
-                    humidityChart.data.labels = labels;
-                    humidityChart.data.datasets[0].data = humidityData;
-                    humidityChart.update();
+            // Update the humidity chart
+            humidityChart.data.labels = labels;
+            humidityChart.data.datasets[0].data = humidityData;
+            humidityChart.update();
 
-                    // Update the temperature and humidity values in the UI
-                    var latestTemperature = temperatureData[temperatureData.length - 1] || '--';
-                    var latestHumidity = humidityData[humidityData.length - 1] || '--';
-                    document.getElementById('temperatureValue').innerText = latestTemperature + ' °C';
-                    document.getElementById('humidityValue').innerText = latestHumidity + ' %';
-                },
-                error: function(error) {
-                    console.error("Error fetching data:", error);
-                }
-            });
+            // Update the temperature and humidity values in the UI
+            var latestTemperature = temperatureData[temperatureData.length - 1] || '--';
+            var latestHumidity = humidityData[humidityData.length - 1] || '--';
+            document.getElementById('temperatureValue').innerText = latestTemperature + ' °C';
+            document.getElementById('humidityValue').innerText = latestHumidity + ' %';
+        },
+        error: function(error) {
+            console.error("Error fetching data:", error);
         }
+    });
+}
+
 
         // Fetch data every 2 seconds
         setInterval(fetchData, 2000);
