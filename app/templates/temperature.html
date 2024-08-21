@@ -235,6 +235,8 @@
         url: '/api/latest_temperaturehumidity/',
         method: 'GET',
         success: function(response) {
+            console.log("Raw API Response:", response); // Log the raw response to see what's being returned
+
             var labels = [];
             var temperatureData = [];
             var humidityData = [];
@@ -257,31 +259,30 @@
                 });
             }
 
-            // Update the temperature chart
-            temperatureChart.data.labels = labels;
-            temperatureChart.data.datasets[0].data = temperatureData;
-            temperatureChart.update();
+            // Update the charts if there's valid data
+            if (labels.length > 0) {
+                temperatureChart.data.labels = labels;
+                temperatureChart.data.datasets[0].data = temperatureData;
+                temperatureChart.update();
 
-            // Update the humidity chart
-            humidityChart.data.labels = labels;
-            humidityChart.data.datasets[0].data = humidityData;
-            humidityChart.update();
+                humidityChart.data.labels = labels;
+                humidityChart.data.datasets[0].data = humidityData;
+                humidityChart.update();
 
-            // Update the temperature and humidity values in the UI
-            var latestTemperature = temperatureData[temperatureData.length - 1] || '--';
-            var latestHumidity = humidityData[humidityData.length - 1] || '--';
-            document.getElementById('temperatureValue').innerText = latestTemperature + ' °C';
-            document.getElementById('humidityValue').innerText = latestHumidity + ' %';
-
-            console.log("Parsed timestamps:", labels);
-            console.log("Temperature data:", temperatureData);
-            console.log("Humidity data:", humidityData);
+                var latestTemperature = temperatureData[temperatureData.length - 1] || '--';
+                var latestHumidity = humidityData[humidityData.length - 1] || '--';
+                document.getElementById('temperatureValue').innerText = latestTemperature + ' °C';
+                document.getElementById('humidityValue').innerText = latestHumidity + ' %';
+            } else {
+                console.warn("No valid data received.");
+            }
         },
         error: function(error) {
             console.error("Error fetching data:", error);
         }
     });
 }
+
 
         // Fetch data every 2 seconds
         setInterval(fetchData, 2000);
