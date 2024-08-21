@@ -1,6 +1,8 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Temperature & Humidity</title>
     <!-- Bootstrap CSS -->
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
@@ -30,55 +32,35 @@
             border-radius: 10px;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
             background-color: rgba(255, 255, 255, 0.2);
+            margin-bottom: 20px;
         }
 
         .card-body {
             padding: 20px;
         }
 
-        /* Updated card titles for temperature and humidity */
         .temperature-title {
-            color: #007bff; /* Blue text for temperature title */
+            color: #ff7f0e;
         }
 
         .humidity-title {
-            color: #dc3545; /* Red text for humidity title */
+            color: #1f77b4;
         }
 
-        .sensor-box {
-            background-color: #004e92;
-            color: #fff;
-            padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
-            text-align: center;
-            font-size: 24px;
-            margin-bottom: 20px;
-        }
-
-        .sensor-box i {
-            margin-right: 10px;
-            font-size: 32px;
-        }
-
-        /* Updated colors for temperature and humidity values */
         #temperatureValue {
             font-weight: bold;
-            color: #007bff; /* Blue text for temperature values */
+            color: #ff7f0e;
         }
 
         #humidityValue {
             font-weight: bold;
-            color: #dc3545; /* Red text for humidity values */
+            color: #1f77b4;
         }
 
         .chart-box {
-            background-color: rgba(255, 255, 255, 0.2);
             padding: 20px;
             border-radius: 10px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
-            margin-bottom: 20px;
-            width: 100%; /* Ensure it fills the container */
+            background-color: rgba(255, 255, 255, 0.1);
         }
 
         canvas {
@@ -95,7 +77,6 @@
             <div class="col-md-6">
                 <div class="card">
                     <div class="card-body">
-                        <!-- Updated class for temperature title -->
                         <h5 class="card-title temperature-title">Temperature</h5>
                         <canvas id="temperatureChart"></canvas>
                         <div class="mt-3 text-center">
@@ -108,7 +89,6 @@
             <div class="col-md-6">
                 <div class="card">
                     <div class="card-body">
-                        <!-- Updated class for humidity title -->
                         <h5 class="card-title humidity-title">Humidity</h5>
                         <canvas id="humidityChart"></canvas>
                         <div class="mt-3 text-center">
@@ -134,7 +114,6 @@
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 
     <script>
-        // Function to update date and time
         function updateDateTime() {
             var now = new Date();
             var datetimeStr = now.toLocaleString();
@@ -142,181 +121,189 @@
         }
         setInterval(updateDateTime, 1000);
 
-        // Initialize temperature chart
-// Initialize temperature chart with blue color and gradient
-var temperatureCtx = document.getElementById('temperatureChart').getContext('2d');
+        var temperatureCtx = document.getElementById('temperatureChart').getContext('2d');
+        var humidityCtx = document.getElementById('humidityChart').getContext('2d');
 
-// Create a gradient fill for temperature chart
-var temperatureGradient = temperatureCtx.createLinearGradient(0, 0, 0, 400);
-temperatureGradient.addColorStop(0, "rgba(0, 123, 255, 0.5)");  // Semi-transparent blue
-temperatureGradient.addColorStop(1, "rgba(0, 123, 255, 0)");    // Fully transparent
+        var temperatureGradient = temperatureCtx.createLinearGradient(0, 0, 0, 400);
+        temperatureGradient.addColorStop(0, "rgba(255, 127, 14, 0.5)");
+        temperatureGradient.addColorStop(1, "rgba(255, 127, 14, 0)");
 
-var temperatureChart = new Chart(temperatureCtx, {
-    type: 'line',
-    data: {
-        labels: [], // Time labels
-        datasets: [{
-            label: 'Temperature (°C)',
-            data: [],
-            borderColor: '#007bff',  // Blue line for temperature chart
-            borderWidth: 2,
-            fill: true,
-            backgroundColor: temperatureGradient  // Apply the gradient fill
-        }]
-    },
-    options: {
+        var humidityGradient = humidityCtx.createLinearGradient(0, 0, 0, 400);
+        humidityGradient.addColorStop(0, "rgba(31, 119, 180, 0.5)");
+        humidityGradient.addColorStop(1, "rgba(31, 119, 180, 0)");
+
+        var temperatureChart = new Chart(temperatureCtx, {
+            type: 'line',
+            data: {
+                labels: [],
+                datasets: [{
+                    label: 'Temperature (°C)',
+                    data: [],
+                    borderColor: '#ff7f0e',
+                    borderWidth: 3,
+                    fill: true,
+                    backgroundColor: temperatureGradient,
+                    pointBackgroundColor: '#fff',
+                    pointBorderColor: '#ff7f0e',
+                    pointHoverBackgroundColor: '#ff7f0e',
+                    pointHoverBorderColor: '#fff',
+                    pointRadius: 5,
+                    pointHoverRadius: 7
+                }]
+            },
+            options: {
+                responsive: true,
                 scales: {
                     x: {
                         type: 'time',
                         time: {
                             unit: 'minute',
-                            tooltipFormat: 'DD T'
+                            tooltipFormat: 'HH:mm:ss'
                         },
                         grid: {
-                            color: '#fff' // White grid lines
+                            color: 'rgba(255, 255, 255, 0.1)'
                         },
                         ticks: {
-                            color: '#fff' // White axis labels
+                            color: '#fff'
                         }
                     },
                     y: {
                         beginAtZero: true,
-                        min: 0, // Minimum value for y-axis
-                        max: 40, // Maximum value for y-axis
+                        min: 0,
+                        max: 40,
                         grid: {
-                            color: '#fff' // White grid lines
+                            color: 'rgba(255, 255, 255, 0.1)'
                         },
                         ticks: {
-                            color: '#fff' // White axis labels
+                            color: '#fff'
                         }
+                    }
+                },
+                plugins: {
+                    tooltip: {
+                        backgroundColor: 'rgba(255, 127, 14, 0.8)',
+                        titleColor: '#fff',
+                        bodyColor: '#fff',
+                        borderColor: '#ff7f0e',
+                        borderWidth: 1
                     }
                 },
                 elements: {
                     line: {
-                        tension: 0.1
+                        tension: 0.4
                     }
                 }
             }
         });
 
-
- // Initialize humidity chart with red color and gradient
-var humidityCtx = document.getElementById('humidityChart').getContext('2d');
-
-// Create a gradient fill for humidity chart
-var humidityGradient = humidityCtx.createLinearGradient(0, 0, 0, 400);
-humidityGradient.addColorStop(0, "rgba(220, 53, 69, 0.5)");  // Semi-transparent red
-humidityGradient.addColorStop(1, "rgba(220, 53, 69, 0)");    // Fully transparent
-
-var humidityChart = new Chart(humidityCtx, {
-    type: 'line',
-    data: {
-        labels: [], // Time labels
-        datasets: [{
-            label: 'Humidity (%)',
-            data: [],
-            borderColor: '#dc3545',  // Red line for humidity chart
-            borderWidth: 2,
-            fill: true,
-            backgroundColor: humidityGradient  // Apply the gradient fill
-        }]
-    },
-    options: {
+        var humidityChart = new Chart(humidityCtx, {
+            type: 'line',
+            data: {
+                labels: [],
+                datasets: [{
+                    label: 'Humidity (%)',
+                    data: [],
+                    borderColor: '#1f77b4',
+                    borderWidth: 3,
+                    fill: true,
+                    backgroundColor: humidityGradient,
+                    pointBackgroundColor: '#fff',
+                    pointBorderColor: '#1f77b4',
+                    pointHoverBackgroundColor: '#1f77b4',
+                    pointHoverBorderColor: '#fff',
+                    pointRadius: 5,
+                    pointHoverRadius: 7
+                }]
+            },
+            options: {
+                responsive: true,
                 scales: {
                     x: {
                         type: 'time',
                         time: {
                             unit: 'minute',
-                            tooltipFormat: 'DD T'
+                            tooltipFormat: 'HH:mm:ss'
                         },
                         grid: {
-                            color: '#fff' // White grid lines
+                            color: 'rgba(255, 255, 255, 0.1)'
                         },
                         ticks: {
-                            color: '#fff' // White axis labels
+                            color: '#fff'
                         }
                     },
                     y: {
                         beginAtZero: true,
-                        min: 0, // Minimum value for y-axis
-                        max: 100, // Maximum value for y-axis
+                        min: 0,
+                        max: 100,
                         grid: {
-                            color: '#fff' // White grid lines
+                            color: 'rgba(255, 255, 255, 0.1)'
                         },
                         ticks: {
-                            color: '#fff' // White axis labels
+                            color: '#fff'
                         }
+                    }
+                },
+                plugins: {
+                    tooltip: {
+                        backgroundColor: 'rgba(31, 119, 180, 0.8)',
+                        titleColor: '#fff',
+                        bodyColor: '#fff',
+                        borderColor: '#1f77b4',
+                        borderWidth: 1
                     }
                 },
                 elements: {
                     line: {
-                        tension: 0.1
+                        tension: 0.4
                     }
                 }
             }
         });
 
-        // Function to fetch data from the server
         function fetchData() {
-    $.ajax({
-        url: '/api/latest_temperaturehumidity/',  // Ensure this URL matches the one in urls.py
-        method: 'GET',
-        success: function(response) {
-            console.log("Data received:", response);
+            $.ajax({
+                url: '/api/latest_temperaturehumidity/',
+                method: 'GET',
+                success: function(response) {
+                    console.log("Data received:", response);
+                    var labels = [];
+                    var temperatureData = [];
+                    var humidityData = [];
 
-            // Initialize arrays to store labels (time), temperature, and humidity data
-            var labels = [];
-            var temperatureData = [];
-            var humidityData = [];
-
-            // Handle different response formats
-            if (response.temperature && response.humidity) {
-                // If the response is a single object with temperature and humidity properties
-                labels.push(new Date());  // Use the current time as the label
-                temperatureData.push(response.temperature);
-                humidityData.push(response.humidity);
-            } else if (Array.isArray(response)) {
-                // If the response is an array, process each entry
-                response.forEach(function(entry) {
-                    if (entry.timestamp && entry.temperature && entry.humidity) {
-                        labels.push(new Date(entry.timestamp));
-                        temperatureData.push(entry.temperature);
-                        humidityData.push(entry.humidity);
-                    } else {
-                        console.warn("Unexpected entry format:", entry);
+                    if (response.temperature && response.humidity) {
+                        labels.push(new Date());
+                        temperatureData.push(response.temperature);
+                        humidityData.push(response.humidity);
+                    } else if (Array.isArray(response)) {
+                        response.forEach(function(entry) {
+                            if (entry.timestamp && entry.temperature && entry.humidity) {
+                                labels.push(new Date(entry.timestamp));
+                                temperatureData.push(entry.temperature);
+                                humidityData.push(entry.humidity);
+                            }
+                        });
                     }
-                });
-            } else {
-                console.warn("Unexpected response format:", response);
-            }
 
-            // Update the temperature chart
-            temperatureChart.data.labels = labels;
-            temperatureChart.data.datasets[0].data = temperatureData;
-            temperatureChart.update();
+                    temperatureChart.data.labels = labels;
+                    temperatureChart.data.datasets[0].data = temperatureData;
+                    temperatureChart.update();
 
-            // Update the humidity chart
-            humidityChart.data.labels = labels;
-            humidityChart.data.datasets[0].data = humidityData;
-            humidityChart.update();
+                    humidityChart.data.labels = labels;
+                    humidityChart.data.datasets[0].data = humidityData;
+                    humidityChart.update();
 
-            // Update the temperature and humidity values in the UI
-            var latestTemperature = temperatureData[temperatureData.length - 1] || '--';
-            var latestHumidity = humidityData[humidityData.length - 1] || '--';
-            document.getElementById('temperatureValue').innerText = latestTemperature + ' °C';
-            document.getElementById('humidityValue').innerText = latestHumidity + ' %';
-        },
-        error: function(error) {
-            console.error("Error fetching data:", error);
+                    var latestTemperature = temperatureData[temperatureData.length - 1] || '--';
+                    var latestHumidity = humidityData[humidityData.length - 1] || '--';
+                    document.getElementById('temperatureValue').innerText = latestTemperature + ' °C';
+                    document.getElementById('humidityValue').innerText = latestHumidity + ' %';
+                },
+                error: function(error) {
+                    console.error("Error fetching data:", error);
+                }
+            });
         }
-    });
-}
 
-// Fetch data every 2 seconds
-setInterval(fetchData, 2000);
-
-
-
+        setInterval(fetchData, 2000);
     </script>
 </body>
 </html>
