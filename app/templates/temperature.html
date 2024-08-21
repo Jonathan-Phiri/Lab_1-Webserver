@@ -255,11 +255,12 @@
                 console.warn("Unexpected response format:", response);
             }
 
-            console.log("Labels:", labels);  // Debug the labels array
-            console.log("Temperature:", temperatureData);  // Debug the labels array
-            console.log("Humidity:", humidityData);  // Debug the labels array
+            // console.log("Labels:", labels);  // Debug the labels array
+            // console.log("Temperature:", temperatureData);  // Debug the labels array
+            // console.log("Humidity:", humidityData);  // Debug the labels array
 
             // Update the charts if there's valid data
+            console.log(labels.length);
             if (labels.length > 0) {
                 temperatureChart.data.labels = labels;
                 temperatureChart.data.datasets[0].data = temperatureData;
