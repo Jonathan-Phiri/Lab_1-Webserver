@@ -241,22 +241,16 @@
             var temperatureData = [];
             var humidityData = [];
 
-            if (response.temperature && response.humidity && response.timestamp) {
-                // Convert timestamp to Date object
-                var timestamp = new Date(response.timestamp);
+            // Generate a timestamp using the current time
+            var timestamp = new Date();
+
+            if (response.temperature && response.humidity) {
+                // Push the current timestamp and data into the arrays
                 labels.push(timestamp);
                 temperatureData.push(parseFloat(response.temperature));
                 humidityData.push(parseFloat(response.humidity));
-            } else if (Array.isArray(response)) {
-                response.forEach(function(entry) {
-                    if (entry.timestamp && entry.temperature && entry.humidity) {
-                        // Convert timestamp to Date object
-                        var timestamp = new Date(entry.timestamp);
-                        labels.push(timestamp);
-                        temperatureData.push(parseFloat(entry.temperature));
-                        humidityData.push(parseFloat(entry.humidity));
-                    }
-                });
+            } else {
+                console.warn("Unexpected response format:", response);
             }
 
             // Update the charts if there's valid data
@@ -282,6 +276,8 @@
         }
     });
 }
+
+
 
 
         // Fetch data every 2 seconds
