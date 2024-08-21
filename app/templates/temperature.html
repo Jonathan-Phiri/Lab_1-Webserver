@@ -248,8 +248,9 @@
 
             if (response.temperature && response.humidity) {
                 // Push the current timestamp and data into the arrays
-                labels.push(timestamp);
+                labels.push(new Date(response.timestamp).toLocaleTimeString());
                 temperatureData.push(parseFloat(response.temperature));
+                console.log("temp now: " + response.temperature);
                 humidityData.push(parseFloat(response.humidity));
             } else {
                 console.warn("Unexpected response format:", response);
