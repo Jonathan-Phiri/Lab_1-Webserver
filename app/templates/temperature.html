@@ -154,7 +154,7 @@
                             text: 'Temparature'
                         }
                     }
-                },
+                }
             }
         });
 
@@ -172,18 +172,25 @@
                     borderWidth: 2,
                     tension: 0.4,
                     pointRadius: 3,
+                    fill:false,
                     pointBackgroundColor: '#f97316'
                 }]
             },
             options: {
                 scales: {
                     x: {
-                        type: 'time',
-                        time: {
-                            unit: 'minute',
-                            displayFormats: {
-                                minute: 'h:mm a'
-                            }
+                        title:{
+                            display: true,
+                            text: 'Time'
+                        }
+                    },
+                    y: {
+                        title:{
+                            display: true,
+                            text: 'Humidity'
+                        }
+                    }
+                }
                         },
                         grid: {
                             color: 'rgba(209, 213, 219, 0.3)'
