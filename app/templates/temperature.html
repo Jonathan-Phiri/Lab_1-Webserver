@@ -230,6 +230,9 @@
         });
 
         // Function to fetch data from the server
+        var labels = [];
+            var temperatureData = [];
+            var humidityData = [];
         function fetchData() {
     $.ajax({
         url: '/api/latest_temperaturehumidity/',
@@ -237,9 +240,7 @@
         success: function(response) {
             console.log("Raw API Response:", response); // Log the raw response to see what's being returned
 
-            var labels = [];
-            var temperatureData = [];
-            var humidityData = [];
+            
 
             // Generate a timestamp using the current time
             var timestamp = new Date().toLocaleTimeString();  // Format time for readability
