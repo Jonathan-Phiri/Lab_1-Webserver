@@ -242,7 +242,8 @@
             var humidityData = [];
 
             // Generate a timestamp using the current time
-            var timestamp = new Date();
+            var timestamp = new Date().toLocaleTimeString();  // Format time for readability
+            console.log("Generated Timestamp:", timestamp); // Debugging timestamp
 
             if (response.temperature && response.humidity) {
                 // Push the current timestamp and data into the arrays
@@ -252,6 +253,8 @@
             } else {
                 console.warn("Unexpected response format:", response);
             }
+
+            console.log("Labels:", labels);  // Debug the labels array
 
             // Update the charts if there's valid data
             if (labels.length > 0) {
@@ -276,6 +279,7 @@
         }
     });
 }
+
 
 
 
