@@ -114,12 +114,12 @@
 
     <script>
         // Function to update date and time
-        function updateDateTime() {
+        function updateTime() {
             var now = new Date();
-            var datetimeStr = now.toLocaleString();
-            document.getElementById('datetime').innerText = datetimeStr;
+            var timeStr = now.toLocaleString();
+            document.getElementById('time').innerText = timeStr;
         }
-        setInterval(updateDateTime, 2000);
+        setInterval(updateTime, 2000);
 
         // Initialize temperature chart
         var temperatureCtx = document.getElementById('temperatureChart').getContext('2d');
