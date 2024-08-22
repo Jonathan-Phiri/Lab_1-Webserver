@@ -114,12 +114,12 @@
 
     <script>
         // Function to update date and time
-        function updateTime() {
+        function updateDateTime() {
             var now = new Date();
-            var timeStr = now.toLocaleString();
-            document.getElementById('time').innerText = timeStr;
+            var datetimeStr = now.toLocaleString();
+            document.getElementById('datetime').innerText = datetimeStr;
         }
-        setInterval(updateTime, 2000);
+        setInterval(updateDateTime, 2000);
 
         // Initialize temperature chart
         var temperatureCtx = document.getElementById('temperatureChart').getContext('2d');
@@ -215,7 +215,7 @@
 
             if (response.temperature && response.humidity) {
                 // Push the current timestamp and data into the arrays
-                labels.push(new Date(timestamp));
+                labels.push(timestamp));
                 temperatureData.push(parseFloat(response.temperature));
                 console.log("temp now: " + response.temperature);
                 humidityData.push(parseFloat(response.humidity));
