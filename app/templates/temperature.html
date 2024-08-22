@@ -119,7 +119,7 @@
             var datetimeStr = now.toLocaleString();
             document.getElementById('datetime').innerText = datetimeStr;
         }
-        setInterval(updateDateTime, 1000);
+        setInterval(updateDateTime, 2000);
 
         // Initialize temperature chart
         var temperatureCtx = document.getElementById('temperatureChart').getContext('2d');
@@ -215,7 +215,7 @@
 
             if (response.temperature && response.humidity) {
                 // Push the current timestamp and data into the arrays
-                labels.push(new Date(response.timestamp));
+                labels.push(new Date(timestamp));
                 temperatureData.push(parseFloat(response.temperature));
                 console.log("temp now: " + response.temperature);
                 humidityData.push(parseFloat(response.humidity));
