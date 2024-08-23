@@ -1,5 +1,5 @@
 from django.urls import path
-from .views import TemperatureHumidityDetailView,  TemperatureHumidityListView, LatestTemperatureHumidityAPIView, TemperatureHumidityCreateAPIView, TemperatureHumidityCreateAPIView, temperature_monitor
+from .views import TemperatureHumidityDetailView,  TemperatureHumidityListView, LatestTemperatureHumidityAPIView, TemperatureHumidityCreateAPIView, TemperatureHumidityCreateAPIView, temperature_monitor, humidity_monitor
 
 urlpatterns = [
     path('temperatures/', TemperatureHumidityListView.as_view(), name='temperature-list'),
@@ -7,6 +7,6 @@ urlpatterns = [
     path('createtemperatures/', TemperatureHumidityCreateAPIView.as_view(), name='temperature-create'),
     path('api/latest_temperaturehumidity/', LatestTemperatureHumidityAPIView.as_view(), name='latest_temperaturehumidity'),
     path('temperature-monitor/', temperature_monitor, name='temperature-monitor'),
-    path('humidity-monitor/', temperature_monitor, name='humidity-monitor'),
+    path('humidity-monitor/', humidity_monitor, name='humidity-monitor'),
 ]
 
