@@ -7,5 +7,6 @@ urlpatterns = [
     path('createtemperatures/', TemperatureHumidityCreateAPIView.as_view(), name='temperature-create'),
     path('api/latest_temperaturehumidity/', LatestTemperatureHumidityAPIView.as_view(), name='latest_temperaturehumidity'),
     path('temperature-monitor/', temperature_monitor, name='temperature-monitor'),
+    path('humidity-monitor/', temperature_monitor, name='humidity-monitor'),
 ]
 
