@@ -23,10 +23,11 @@
             padding: 20px;
             border-radius: 12px;
             box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+            max-width: 100%; /* Ensure it scales with the screen */
         }
 
         h1 {
-            font-size: 24px;
+            font-size: 2rem;
             text-align: center;
             color: #f3f4f6;
             margin-bottom: 20px;
@@ -37,11 +38,12 @@
             border: none;
             border-radius: 12px;
             margin-bottom: 20px;
+            padding: 15px;
         }
 
         .card-title {
             color: #f3f4f6;
-            font-size: 18px;
+            font-size: 1.5rem;
             margin-bottom: 10px;
             text-align: center;
         }
@@ -52,7 +54,7 @@
         }
 
         #temperatureValue, #humidityValue {
-            font-size: 28px;
+            font-size: 2rem;
             font-weight: bold;
             color: #10b981;
         }
@@ -61,18 +63,65 @@
             padding: 20px;
             border-radius: 12px;
             background-color: #1c1f26;
+            position: relative;
         }
 
         canvas {
             display: block;
-            height: 400px;
+            height: 300px; /* Set a fixed height to maintain aspect ratio */
+            max-width: 100%; /* Ensure the canvas scales with the screen */
         }
 
         #datetime {
             text-align: center;
-            font-size: 18px;
+            font-size: 1rem;
             margin-top: 20px;
             color: #9ca3af;
+        }
+
+        /* Media Queries for smaller devices */
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 1.5rem;
+            }
+
+            .card-title {
+                font-size: 1.25rem;
+            }
+
+            #temperatureValue, #humidityValue {
+                font-size: 1.5rem;
+            }
+
+            .chart-box {
+                padding: 10px;
+            }
+
+            canvas {
+                height: 250px;
+            }
+
+            #datetime {
+                font-size: 0.875rem;
+            }
+        }
+
+        @media (max-width: 576px) {
+            h1 {
+                font-size: 1.25rem;
+            }
+
+            .card-title {
+                font-size: 1rem;
+            }
+
+            #temperatureValue, #humidityValue {
+                font-size: 1.25rem;
+            }
+
+            canvas {
+                height: 200px;
+            }
         }
     </style>
 </head>
@@ -80,26 +129,32 @@
     <div class="container mt-5">
         <h1>Temperature & Humidity</h1>
         
-        <div class="card">
-            <div class="card-body">
-                <h5 class="card-title">Temperature</h5>
-                <div class="chart-box">
-                    <canvas id="temperatureChart"></canvas>
-                </div>
-                <div class="value-box">
-                    <p id="temperatureValue">-- °C</p>
+        <div class="row">
+            <div class="col-12 col-md-6">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">Temperature</h5>
+                        <div class="chart-box">
+                            <canvas id="temperatureChart"></canvas>
+                        </div>
+                        <div class="value-box">
+                            <p id="temperatureValue">-- °C</p>
+                        </div>
+                    </div>
                 </div>
             </div>
-        </div>
-        
-        <div class="card">
-            <div class="card-body">
-                <h5 class="card-title">Humidity</h5>
-                <div class="chart-box">
-                    <canvas id="humidityChart"></canvas>
-                </div>
-                <div class="value-box">
-                    <p id="humidityValue">-- %</p>
+
+            <div class="col-12 col-md-6">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">Humidity</h5>
+                        <div class="chart-box">
+                            <canvas id="humidityChart"></canvas>
+                        </div>
+                        <div class="value-box">
+                            <p id="humidityValue">-- %</p>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -140,7 +195,6 @@
                 }]
             },
             options: {
-
                 scales: {
                     x: {
                         title:{
@@ -151,7 +205,7 @@
                     y: {
                         title:{
                             display: true,
-                            text: 'Temparature'
+                            text: 'Temperature'
                         }
                     }
                 }
@@ -191,70 +245,56 @@
                         }
                     }
                 }
-                    
-                
             }
         });
 
         // Function to fetch data from the server
         var labels = [];
-            var temperatureData = [];
-            var humidityData = [];
+        var temperatureData = [];
+        var humidityData = [];
+        
         function fetchData() {
-    $.ajax({
-        url: '/api/latest_temperaturehumidity/',
-        method: 'GET',
-        success: function(response) {
-            console.log("Raw API Response:", response); // Log the raw response to see what's being returned
+            $.ajax({
+                url: '/api/latest_temperaturehumidity/',
+                method: 'GET',
+                success: function(response) {
+                    console.log("Raw API Response:", response); // Log the raw response to see what's being returned
 
-            
+                    var timestamp = new Date().toLocaleTimeString();  // Format time for readability
+                    console.log("Generated Timestamp:", timestamp); // Debugging timestamp
 
-            // Generate a timestamp using the current time
-            var timestamp = new Date().toLocaleTimeString();  // Format time for readability
-            console.log("Generated Timestamp:", timestamp); // Debugging timestamp
+                    if (response.temperature && response.humidity) {
+                        // Push the current timestamp and data into the arrays
+                        labels.push(timestamp);
+                        temperatureData.push(parseFloat(response.temperature));
+                        console.log("temp now: " + response.temperature);
+                        humidityData.push(parseFloat(response.humidity));
+                    } else {
+                        console.warn("Unexpected response format:", response);
+                    }
 
-            if (response.temperature && response.humidity) {
-                // Push the current timestamp and data into the arrays
-                labels.push(timestamp);
-                temperatureData.push(parseFloat(response.temperature));
-                console.log("temp now: " + response.temperature);
-                humidityData.push(parseFloat(response.humidity));
-            } else {
-                console.warn("Unexpected response format:", response);
-            }
+                    if (labels.length > 0) {
+                        temperatureChart.data.labels = labels;
+                        temperatureChart.data.datasets[0].data = temperatureData;
+                        temperatureChart.update();
 
-            // console.log("Labels:", labels);  // Debug the labels array
-            // console.log("Temperature:", temperatureData);  // Debug the labels array
-            // console.log("Humidity:", humidityData);  // Debug the labels array
+                        humidityChart.data.labels = labels;
+                        humidityChart.data.datasets[0].data = humidityData;
+                        humidityChart.update();
 
-            // Update the charts if there's valid data
-            console.log(labels.length);
-            if (labels.length > 0) {
-                temperatureChart.data.labels = labels;
-                temperatureChart.data.datasets[0].data = temperatureData;
-                temperatureChart.update();
-
-                humidityChart.data.labels = labels;
-                humidityChart.data.datasets[0].data = humidityData;
-                humidityChart.update();
-
-                var latestTemperature = temperatureData[temperatureData.length - 1] || '--';
-                var latestHumidity = humidityData[humidityData.length - 1] || '--';
-                document.getElementById('temperatureValue').innerText = latestTemperature + ' °C';
-                document.getElementById('humidityValue').innerText = latestHumidity + ' %';
-            } else {
-                console.warn("No valid data received.");
-            }
-        },
-        error: function(error) {
-            console.error("Error fetching data:", error);
+                        var latestTemperature = temperatureData[temperatureData.length - 1] || '--';
+                        var latestHumidity = humidityData[humidityData.length - 1] || '--';
+                        document.getElementById('temperatureValue').innerText = latestTemperature + ' °C';
+                        document.getElementById('humidityValue').innerText = latestHumidity + ' %';
+                    } else {
+                        console.warn("No valid data received.");
+                    }
+                },
+                error: function(error) {
+                    console.error("Error fetching data:", error);
+                }
+            });
         }
-    });
-}
-
-
-
-
 
         // Fetch data every 2 seconds
         setInterval(fetchData, 2000);
