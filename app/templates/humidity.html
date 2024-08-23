@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Temperature</title>
+    <title>Humidity</title>
     <!-- Bootstrap CSS -->
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
     <!-- Chart.js -->
@@ -53,7 +53,7 @@
             margin-top: 10px;
         }
 
-        #temperatureValue {
+        #humidityValue {
             font-size: 2rem;
             font-weight: bold;
             color: #10b981;
@@ -89,7 +89,7 @@
                 font-size: 1.25rem;
             }
 
-            #temperatureValue {
+            #humidityValue {
                 font-size: 1.5rem;
             }
 
@@ -115,7 +115,7 @@
                 font-size: 1rem;
             }
 
-            #temperatureValue {
+            #humidityValue {
                 font-size: 1.25rem;
             }
 
@@ -149,22 +149,22 @@
 </head>
 <body>
     <div class="container mt-5">
-        <h1>Temperature</h1>
+        <h1>Humidity</h1>
         
         <div class="card">
             <div class="card-body">
-                <h5 class="card-title">Temperature</h5>
+                <h5 class="card-title">Humidity</h5>
                 <div class="chart-box">
-                    <canvas id="temperatureChart"></canvas>
+                    <canvas id="humidityChart"></canvas>
                 </div>
                 <div class="value-box">
-                    <p id="temperatureValue">-- °C</p>
+                    <p id="humidityValue">-- %</p>
                 </div>
             </div>
         </div>
 
         <div class="nav-btn">
-            <a href="humidity.html">Next: Humidity</a>
+            <a href="temperature.html">Previous: Temperature</a>
         </div>
 
         <p id="datetime"></p>
@@ -184,22 +184,22 @@
         }
         setInterval(updateDateTime, 2000);
 
-        // Initialize temperature chart
-        var temperatureCtx = document.getElementById('temperatureChart').getContext('2d');
-        var temperatureChart = new Chart(temperatureCtx, {
+        // Initialize humidity chart
+        var humidityCtx = document.getElementById('humidityChart').getContext('2d');
+        var humidityChart = new Chart(humidityCtx, {
             type: 'line',
             data: {
                 labels: [],
                 datasets: [{
-                    label: 'Temperature (°C)',
+                    label: 'Humidity (%)',
                     data: [],
-                    borderColor: '#3b82f6',
-                    backgroundColor: 'rgba(59, 130, 246, 0.1)',
-                    fill: false,
+                    borderColor: '#f97316',
+                    backgroundColor: 'rgba(249, 115, 22, 0.1)',
                     borderWidth: 2,
                     tension: 0.4,
                     pointRadius: 3,
-                    pointBackgroundColor: '#3b82f6'
+                    fill:false,
+                    pointBackgroundColor: '#f97316'
                 }]
             },
             options: {
@@ -213,7 +213,7 @@
                     y: {
                         title:{
                             display: true,
-                            text: 'Temperature'
+                            text: 'Humidity'
                         }
                     }
                 }
@@ -222,7 +222,7 @@
 
         // Function to fetch data from the server
         var labels = [];
-        var temperatureData = [];
+        var humidityData = [];
         
         function fetchData() {
             $.ajax({
@@ -230,18 +230,18 @@
                 method: 'GET',
                 success: function(response) {
                     var timestamp = new Date().toLocaleTimeString();  
-                    if (response.temperature) {
+                    if (response.humidity) {
                         labels.push(timestamp);
-                        temperatureData.push(parseFloat(response.temperature));
+                        humidityData.push(parseFloat(response.humidity));
                     } 
 
                     if (labels.length > 0) {
-                        temperatureChart.data.labels = labels;
-                        temperatureChart.data.datasets[0].data = temperatureData;
-                        temperatureChart.update();
+                        humidityChart.data.labels = labels;
+                        humidityChart.data.datasets[0].data = humidityData;
+                        humidityChart.update();
 
-                        var latestTemperature = temperatureData[temperatureData.length - 1] || '--';
-                        document.getElementById('temperatureValue').innerText = latestTemperature + ' °C';
+                        var latestHumidity = humidityData[humidityData.length - 1] || '--';
+                        document.getElementById('humidityValue').innerText = latestHumidity + ' %';
                     } else {
                         console.warn("No valid data received.");
                     }

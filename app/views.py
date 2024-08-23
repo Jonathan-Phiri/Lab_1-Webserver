@@ -29,3 +29,6 @@ class LatestTemperatureHumidityAPIView(APIView):
 def temperature_monitor(request):
     return render(request, 'temperature.html')
 
+def temperature_monitor(request):
+    return render(request, 'humidity.html')
+
