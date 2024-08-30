@@ -5,99 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>History</title>
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #1c1c1c;
-            color: #f4f4f4;
-            margin: 0;
-            padding: 20px;
-        }
-
-        header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 20px;
-        }
-
-        h1 {
-            color: #4db8ff;
-            margin: 0;
-        }
-
-        .back-button, .search-container {
-            font-size: 16px;
-            padding: 10px;
-            background-color: #007bff;
-            color: #fff;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-        }
-
-        .back-button {
-            background-color: #4db8ff;
-        }
-
-        .back-button:hover, .search-container input[type="submit"]:hover {
-            background-color: #0056b3;
-        }
-
-        .search-container {
-            display: flex;
-            align-items: center;
-        }
-
-        .search-container input[type="date"] {
-            padding: 8px;
-            margin-right: 10px;
-            border: 1px solid #4db8ff;
-            border-radius: 5px;
-            background-color: #333;
-            color: #f4f4f4;
-        }
-
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin: 20px 0;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
-            background-color: #333;
-        }
-
-        th, td {
-            padding: 12px;
-            border: 1px solid #555;
-            text-align: center;
-        }
-
-        th {
-            background-color: #4db8ff;
-            color: #fff;
-        }
-
-        tr:nth-child(even) {
-            background-color: #2b2b2b;
-        }
-
-        tr:hover {
-            background-color: #444;
-        }
-
-        @media screen and (max-width: 600px) {
-            table {
-                font-size: 14px;
-            }
-
-            th, td {
-                padding: 8px;
-            }
-
-            .back-button, .search-container {
-                font-size: 14px;
-                padding: 8px;
-            }
-        }
+        /* (Your existing CSS styles) */
     </style>
 </head>
 <body>
@@ -105,7 +13,7 @@
         <button class="back-button" onclick="window.location.href='/temperature-monitor/'">Back</button>
         <h1>Temperature and Humidity History</h1>
         <form class="search-container" method="get" action="/history/">
-            <input type="date" name="date" required>
+            <input type="date" name="date" value="{{ date_query }}" required>
             <input type="submit" value="Search">
         </form>
     </header>
@@ -117,17 +25,19 @@
                 <th>Humidity (%)</th>
             </tr>
         </thead>
-        {% for reading in readings %}
-        <tr>
-            <td>{{ reading.timestamp }}</td>
-            <td>{{ reading.temperature }}</td>
-            <td>{{ reading.humidity }}</td>
-        </tr>
-    {% empty %}
-        <tr>
-            <td colspan="3">No readings available.</td>
-        </tr>
-    {% endfor %}
+        <tbody>
+            {% for reading in readings %}
+                <tr>
+                    <td>{{ reading.timestamp }}</td>
+                    <td>{{ reading.temperature }}</td>
+                    <td>{{ reading.humidity }}</td>
+                </tr>
+            {% empty %}
+                <tr>
+                    <td colspan="3">No readings available.</td>
+                </tr>
+            {% endfor %}
+        </tbody>
     </table>
 </body>
 </html>
