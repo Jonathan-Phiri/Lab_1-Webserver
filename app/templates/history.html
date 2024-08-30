@@ -117,14 +117,17 @@
                 <th>Humidity (%)</th>
             </tr>
         </thead>
-        <tbody>
-        
-                <tr>
-                    <td>{{ reading.timestamp }}</td>
-                    <td>{{ reading.temperature }}</td>
-                    <td>{{ reading.humidity }}</td>
-                </tr>
-        </tbody>
+        {% for reading in readings %}
+        <tr>
+            <td>{{ reading.timestamp }}</td>
+            <td>{{ reading.temperature }}</td>
+            <td>{{ reading.humidity }}</td>
+        </tr>
+    {% empty %}
+        <tr>
+            <td colspan="3">No readings available.</td>
+        </tr>
+    {% endfor %}
     </table>
 </body>
 </html>
