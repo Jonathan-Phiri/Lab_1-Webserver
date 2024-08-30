@@ -32,3 +32,9 @@ def temperature_monitor(request):
 def humidity_monitor(request):
     return render(request, 'humidity.html')
 
+
+def history_view(request):
+    readings = TemperatureHumidity.objects.all().order_by('-timestamp') 
+    return render(request, 'history.html', {'readings': readings})
+
+
