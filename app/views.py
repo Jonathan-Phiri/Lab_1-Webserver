@@ -37,4 +37,9 @@ def history_view(request):
     readings = TemperatureHumidity.objects.all().order_by('-timestamp') 
     return render(request, 'history.html', {'readings': readings})
 
+def save_reading(temperature, humidity):
+    reading = TemperatureHumidity(temperature=temperature, humidity=humidity)
+    reading.save()
+
+
 
