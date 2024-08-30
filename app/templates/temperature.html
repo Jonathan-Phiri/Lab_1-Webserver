@@ -148,6 +148,10 @@
     </style>
 </head>
 <body>
+    <div class="nav-btn">
+        <a href="{% url 'humidity-monitor' %}">Next: Humidity</a>
+        <a href="{% url 'history' %}">View History</a>
+    </div>
     <div class="container mt-5">
         <h1>Temperature</h1>
         
@@ -163,9 +167,7 @@
             </div>
         </div>
 
-        <div class="nav-btn">
-            <a href="{% url 'humidity-monitor' %}">Next: Humidity</a>
-        </div>
+        
 
         <p id="datetime"></p>
     </div>

@@ -129,6 +129,8 @@
             display: flex;
             justify-content: space-between;
             margin-top: 20px;
+            justify-content: space-between;
+            margin-bottom: 10px;
         }
 
         .nav-btn a {
@@ -144,6 +146,7 @@
 
         .nav-btn a:hover {
             background-color: #2563eb;
+            
         }
     </style>
 </head>
@@ -151,8 +154,13 @@
     <div class="container mt-5">
         <h1>Humidity</h1>
         <div class="nav-btn">
-            <a href="{% url 'history' %}">Previous: Temperature</a>
-        </div>
+            <a href="{% url 'temperature-monitor' %}">Previous: Temperature</a>
+            <a href="{% url 'history' %}">View History</a>
+        </div>      
+       
+           
+      
+
         <div class="card">
             <div class="card-body">
                 <h5 class="card-title">Humidity</h5>
@@ -164,12 +172,6 @@
                 </div>
             </div>
         </div>
-
-        <div class="nav-btn">
-            <a href="{% url 'temperature-monitor' %}">Previous: Temperature</a>
-        </div>
-
-        <button onclick="window.location.href='/history/'">View History</button>
 
         <p id="datetime"></p>
     </div>
