@@ -18,14 +18,18 @@
             justify-content: space-between;
             align-items: center;
             margin-bottom: 20px;
+            flex-wrap: wrap;
         }
 
         h1 {
             color: #4db8ff;
-            margin: 0;
+            margin: 10px 0;
+            font-size: 2rem;
+            text-align: center;
+            flex: 1 100%;
         }
 
-        .back-button, .search-container {
+        .back-button, .search-container input[type="submit"] {
             font-size: 16px;
             padding: 10px;
             background-color: #007bff;
@@ -33,6 +37,10 @@
             border: none;
             border-radius: 5px;
             cursor: pointer;
+            margin: 5px;
+            flex: 1;
+            max-width: 150px;
+            text-align: center;
         }
 
         .back-button {
@@ -46,6 +54,11 @@
         .search-container {
             display: flex;
             align-items: center;
+            justify-content: center;
+            margin-top: 10px;
+            flex: 1;
+            max-width: 300px;
+            width: 100%;
         }
 
         .search-container input[type="date"] {
@@ -55,6 +68,7 @@
             border-radius: 5px;
             background-color: #333;
             color: #f4f4f4;
+            flex: 1;
         }
 
         table {
@@ -84,17 +98,54 @@
             background-color: #444;
         }
 
-        @media screen and (max-width: 600px) {
+        @media screen and (max-width: 768px) {
+            h1 {
+                font-size: 1.5rem;
+            }
+
+            .back-button, .search-container input[type="submit"] {
+                font-size: 14px;
+                padding: 8px;
+            }
+
             table {
                 font-size: 14px;
             }
 
             th, td {
-                padding: 8px;
+                padding: 10px;
+            }
+        }
+
+        @media screen and (max-width: 576px) {
+            header {
+                flex-direction: column;
             }
 
-            .back-button, .search-container {
-                font-size: 14px;
+            h1 {
+                font-size: 1.25rem;
+            }
+
+            .back-button, .search-container input[type="submit"] {
+                font-size: 12px;
+                padding: 6px;
+                max-width: 120px;
+            }
+
+            .search-container {
+                max-width: 100%;
+            }
+
+            .search-container input[type="date"] {
+                margin-bottom: 10px;
+                padding: 6px;
+            }
+
+            table {
+                font-size: 12px;
+            }
+
+            th, td {
                 padding: 8px;
             }
         }
