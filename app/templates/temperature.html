@@ -16,34 +16,35 @@
             background-color: #2b2f3a;
             color: #d1d5db;
             margin: 0;
-            padding: 20px;
+            padding: 10px;
         }
 
         .container {
-            padding: 20px;
+            padding: 15px;
             border-radius: 12px;
             box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
-            max-width: 75%;
+            max-width: 90%;
+            margin: auto;
         }
 
         h1 {
-            font-size: 2rem;
+            font-size: 1.8rem;
             text-align: center;
             color: #f3f4f6;
-            margin-bottom: 20px;
+            margin-bottom: 15px;
         }
 
         .card {
             background-color: #1c1f26;
             border: none;
             border-radius: 12px;
-            margin-bottom: 20px;
+            margin-bottom: 15px;
             padding: 15px;
         }
 
         .card-title {
             color: #f3f4f6;
-            font-size: 1.5rem;
+            font-size: 1.25rem;
             margin-bottom: 10px;
             text-align: center;
         }
@@ -54,13 +55,13 @@
         }
 
         #temperatureValue {
-            font-size: 2rem;
+            font-size: 1.75rem;
             font-weight: bold;
             color: #10b981;
         }
 
         .chart-box {
-            padding: 20px;
+            padding: 15px;
             border-radius: 12px;
             background-color: #1c1f26;
             position: relative;
@@ -68,14 +69,14 @@
 
         canvas {
             display: block;
-            height: 300px;
+            height: 250px;
             max-width: 100%;
         }
 
         #datetime {
             text-align: center;
-            font-size: 1rem;
-            margin-top: 20px;
+            font-size: 0.875rem;
+            margin-top: 15px;
             color: #9ca3af;
         }
 
@@ -86,7 +87,7 @@
             }
 
             .card-title {
-                font-size: 1.25rem;
+                font-size: 1.15rem;
             }
 
             #temperatureValue {
@@ -98,11 +99,11 @@
             }
 
             canvas {
-                height: 250px;
+                height: 200px;
             }
 
             #datetime {
-                font-size: 0.875rem;
+                font-size: 0.75rem;
             }
         }
 
@@ -120,7 +121,11 @@
             }
 
             canvas {
-                height: 200px;
+                height: 180px;
+            }
+
+            .container {
+                padding: 10px;
             }
         }
 
@@ -128,16 +133,16 @@
         .nav-btn {
             display: flex;
             justify-content: space-between;
-            margin-top: 20px;
+            margin-top: 15px;
         }
 
         .nav-btn a {
             text-decoration: none;
             color: white;
-            padding: 10px 20px;
+            padding: 8px 15px;
             border-radius: 5px;
             background-color: #3b82f6;
-            font-size: 1rem;
+            font-size: 0.875rem;
             font-weight: bold;
             text-align: center;
         }
@@ -145,10 +150,22 @@
         .nav-btn a:hover {
             background-color: #2563eb;
         }
+
+        @media (max-width: 576px) {
+            .nav-btn {
+                flex-direction: column;
+            }
+
+            .nav-btn a {
+                margin-bottom: 10px;
+                font-size: 0.75rem;
+                padding: 8px;
+            }
+        }
     </style>
 </head>
 <body>
-    <div class="container mt-5">
+    <div class="container mt-4">
         <h1>Temperature</h1>
         <div class="nav-btn">
             <a href="{% url 'humidity-monitor' %}">Next: Humidity</a>
@@ -165,9 +182,6 @@
                 </div>
             </div>
         </div>
-
-        
-
         <p id="datetime"></p>
     </div>
 
