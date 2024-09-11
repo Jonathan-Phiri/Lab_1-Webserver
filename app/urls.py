@@ -9,6 +9,6 @@ urlpatterns = [
     path('temperature-monitor/', temperature_monitor, name='temperature-monitor'),
     path('humidity-monitor/', humidity_monitor, name='humidity-monitor'),
     path('history/', history_view, name='history'),
-     path('relay-control/', relay_control_view, name='relay_control'),
+    path('relay-control/', relay_control_view, name='relay_control'),
 ]
 
