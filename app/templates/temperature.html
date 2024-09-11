@@ -162,6 +162,71 @@
                 padding: 8px;
             }
         }
+        
+            /* Toggle switch */
+            .switch {
+            position: relative;
+            display: inline-block;
+            width: 60px;
+            height: 34px;
+            }
+
+            .switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+            }
+
+            .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #ccc;
+            transition: 0.4s;
+            }
+
+            .slider:before {
+            position: absolute;
+            content: "";
+            height: 26px;
+            width: 26px;
+            left: 4px;
+            bottom: 4px;
+            background-color: white;
+            transition: 0.4s;
+            }
+
+            input:checked + .slider {
+            background-color: #007bff;
+            }
+
+            input:focus + .slider {
+            box-shadow: 0 0 1px #007bff;
+            }
+
+            input:checked + .slider:before {
+            transform: translateX(26px);
+            }
+
+            /* Rounded slider */
+            .slider.round {
+            border-radius: 34px;
+            }
+
+            .slider.round:before {
+            border-radius: 50%;
+            }
+
+            /* Text for relay status */
+            #relayStatus {
+            color: #4db8ff;
+            font-size: 18px;
+            margin-top: 10px;
+            }
+
     </style>
 </head>
 <body>
@@ -271,34 +336,39 @@
 
         setInterval(fetchData, 2000);
     </script>
-    <div id="relay-control">
-        <button id="relayOnBtn" onclick="controlRelay('true')">Turn Relay ON</button>
-        <button id="relayOffBtn" onclick="controlRelay('false')">Turn Relay OFF</button>
-    </div>
-    
-    <script>
-    function controlRelay(state) {
-        fetch('/relay-control/', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'X-CSRFToken': '{{ csrf_token }}' // Ensure CSRF token is included
-            },
-            body: JSON.stringify({
-                'relay_state': state
-            })
+   <div id="relay-control">
+    <label class="switch">
+        <input type="checkbox" id="relayToggle" onchange="toggleRelay(this)">
+        <span class="slider round"></span>
+    </label>
+    <p id="relayStatus">Relay is OFF</p>
+</div>
+
+<script>
+function toggleRelay(checkbox) {
+    const state = checkbox.checked ? 'true' : 'false';
+    fetch('/relay-control/', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': '{{ csrf_token }}' // Ensure CSRF token is included
+        },
+        body: JSON.stringify({
+            'relay_state': state
         })
-        .then(response => response.json())
-        .then(data => {
-            if (data.message) {
-                alert(data.message); // Display the response message (Relay ON/OFF)
-            } else if (data.error) {
-                alert(data.error);
-            }
-        })
-        .catch(error => console.error('Error:', error));
-    }
-    </script>
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.message) {
+            document.getElementById('relayStatus').innerText = checkbox.checked ? 'Relay is ON' : 'Relay is OFF';
+        } else if (data.error) {
+            alert(data.error);
+        }
+    })
+    .catch(error => console.error('Error:', error));
+}
+</script>
+
     
 </body>
 </html>
