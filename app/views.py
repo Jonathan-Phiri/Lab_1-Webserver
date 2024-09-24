@@ -8,6 +8,7 @@ from datetime import datetime
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 import json
+from django.core.cache import cache
 
 class TemperatureHumidityDetailView(generics.RetrieveAPIView):
     queryset = TemperatureHumidity.objects.all()
@@ -52,44 +53,32 @@ def save_reading(temperature, humidity):
     reading.save()
 
 
-
 relay_state = False  # Initially, relay is OFF
-
 @csrf_exempt
 def relay_control_view(request):
     if request.method == 'POST':
         try:
             data = json.loads(request.body)
-            # Check if the command is sent
             if 'command' in data:
                 command = data['command']
                 if command == 'ON':
-                    # Turn the relay ON (call your function or send signal to ESP32)
-                    relay_state = True
+                    cache.set('relay_state', True)
                     return JsonResponse({'message': 'Relay turned ON'})
                 elif command == 'OFF':
-                    # Turn the relay OFF
-                    relay_state = False
+                    cache.set('relay_state', False)
                     return JsonResponse({'message': 'Relay turned OFF'})
                 else:
                     return JsonResponse({'error': 'Invalid command'}, status=400)
-
-            # Check if the relay state is being toggled from the switch
-            if 'relay_state' in data:
+            elif 'relay_state' in data:
                 relay_state = data['relay_state'] == 'true'
-                # Toggle the relay (you can send a signal to ESP32 here)
+                cache.set('relay_state', relay_state)
                 return JsonResponse({'message': f"Relay is {'ON' if relay_state else 'OFF'}"})
-
         except json.JSONDecodeError:
             return JsonResponse({'error': 'Invalid JSON'}, status=400)
-
     return JsonResponse({'error': 'Invalid request method'}, status=405)
 
 def get_relay_status(request):
-    global relay_state
-
-    # Return relay status as JSON
-    return JsonResponse({'relay_state': relay_state})
-
-
-
+    if request.method == 'GET':
+        relay_state = cache.get('relay_state', False)
+        return JsonResponse({'relay_state': relay_state})
+    return JsonResponse({'error': 'Invalid request method'}, status=405)
