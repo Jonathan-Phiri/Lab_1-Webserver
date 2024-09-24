@@ -227,6 +227,38 @@
             margin-top: 10px;
             }
 
+            #command-control {
+                margin-top: 20px;
+                display: flex;
+                align-items: center;
+            }
+
+            #commandForm input[type="text"] {
+                padding: 10px;
+                border: 1px solid #4db8ff;
+                border-radius: 5px;
+                background-color: #333;
+                color: #fff;
+                margin-right: 10px;
+            }
+
+            #commandForm button {
+                padding: 10px 20px;
+                background-color: #007bff;
+                color: white;
+                border: none;
+                border-radius: 5px;
+                cursor: pointer;
+            }
+
+            #commandForm button:hover {
+                background-color: #0056b3;
+            }
+
+            #commandStatus {
+                color: #4db8ff;
+                margin-top: 10px;
+            }
     </style>
 </head>
 <body>
@@ -336,7 +368,7 @@
 
         setInterval(fetchData, 2000);
     </script>
-   <div id="relay-control">
+  <div id="relay-control">
     <label class="switch">
         <input type="checkbox" id="relayToggle" onchange="toggleRelay(this)">
         <span class="slider round"></span>
@@ -344,14 +376,24 @@
     <p id="relayStatus">Relay is OFF</p>
 </div>
 
+<!-- Input field for command-based relay control -->
+<div id="command-control">
+    <form id="commandForm">
+        <input type="text" id="commandInput" placeholder="Enter ON or OFF" required>
+        <button type="submit">Send Command</button>
+    </form>
+    <p id="commandStatus"></p>
+</div>
+
 <script>
+// Function to toggle the relay using the checkbox
 function toggleRelay(checkbox) {
     const state = checkbox.checked ? 'true' : 'false';
     fetch('/relay-control/', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
-            'X-CSRFToken': '{{ csrf_token }}' // Ensure CSRF token is included
+            'X-CSRFToken': '{{ csrf_token }}'  // Ensure CSRF token is included
         },
         body: JSON.stringify({
             'relay_state': state
@@ -367,6 +409,40 @@ function toggleRelay(checkbox) {
     })
     .catch(error => console.error('Error:', error));
 }
+
+// Handle the submission of the command form
+document.getElementById('commandForm').addEventListener('submit', function(event) {
+    event.preventDefault();  // Prevent page reload
+    const command = document.getElementById('commandInput').value.trim().toUpperCase();
+
+    if (command === 'ON' || command === 'OFF') {
+        fetch('/relay-control/', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': '{{ csrf_token }}'
+            },
+            body: JSON.stringify({
+                'command': command
+            })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.message) {
+                document.getElementById('commandStatus').innerText = `Command accepted: Relay is ${command}`;
+                document.getElementById('relayToggle').checked = (command === 'ON');  // Update the toggle switch
+            } else if (data.error) {
+                document.getElementById('commandStatus').innerText = `Error: ${data.error}`;
+            }
+        })
+        .catch(error => {
+            document.getElementById('commandStatus').innerText = 'Error sending command';
+            console.error('Error:', error);
+        });
+    } else {
+        document.getElementById('commandStatus').innerText = 'Invalid command. Enter ON or OFF.';
+    }
+});
 </script>
 
     
