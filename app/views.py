@@ -61,10 +61,10 @@ def relay_control_view(request):
             data = json.loads(request.body)
             if 'command' in data:
                 command = data['command']
-                if command == 'ON':
+                if command == 'JONATHAN':
                     cache.set('relay_state', True)
                     return JsonResponse({'message': 'Relay turned ON'})
-                elif command == 'OFF':
+                elif command == 'PHIRI':
                     cache.set('relay_state', False)
                     return JsonResponse({'message': 'Relay turned OFF'})
                 else:
