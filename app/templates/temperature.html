@@ -418,7 +418,7 @@ document.getElementById('commandForm').addEventListener('submit', function(event
     event.preventDefault();
     const command = document.getElementById('commandInput').value.trim().toUpperCase();
 
-    if (command === 'ON' || command === 'OFF') {
+    if (command === 'JONATHAN' || command === 'PHIRI') {
         fetch('/relay-control/', {
             method: 'POST',
             headers: {
@@ -433,7 +433,7 @@ document.getElementById('commandForm').addEventListener('submit', function(event
         .then(data => {
             if (data.message) {
                 document.getElementById('commandStatus').innerText = `Command accepted: ${data.message}`;
-                document.getElementById('relayToggle').checked = (command === 'ON');
+                document.getElementById('relayToggle').checked = (command === 'JONATHAN');
                 document.getElementById('relayStatus').innerText = `Relay is ${command}`;
             } else if (data.error) {
                 document.getElementById('commandStatus').innerText = `Error: ${data.error}`;
@@ -444,7 +444,7 @@ document.getElementById('commandForm').addEventListener('submit', function(event
             console.error('Error:', error);
         });
     } else {
-        document.getElementById('commandStatus').innerText = 'Invalid command. Enter ON or OFF.';
+        document.getElementById('commandStatus').innerText = 'Invalid command. Enter JONATHAN or PHIRI.';
     }
 });
 
