@@ -10,6 +10,7 @@ from django.views.decorators.csrf import csrf_exempt
 import json
 from django.core.cache import cache
 
+
 class TemperatureHumidityDetailView(generics.RetrieveAPIView):
     queryset = TemperatureHumidity.objects.all()
     serializer_class = TemperatureHumiditySerializer
@@ -82,3 +83,5 @@ def get_relay_status(request):
         relay_state = cache.get('relay_state', False)
         return JsonResponse({'relay_state': relay_state})
     return JsonResponse({'error': 'Invalid request method'}, status=405)
+
+

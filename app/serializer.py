@@ -5,3 +5,5 @@ class TemperatureHumiditySerializer(serializers.ModelSerializer):
     class Meta:
         model = TemperatureHumidity
         fields = ['temperature', 'humidity', 'timestamp']
+
+
